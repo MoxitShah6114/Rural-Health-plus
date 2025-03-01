@@ -5,13 +5,7 @@ const dotenv = require('dotenv');
 const fs = require('fs');
 const path = require('path');
 const authRoutes = require('./routes/auth');
-// const Doctor = require('../models/Doctor');
-// In server.js
-const Doctor = require('./models/Doctor'); // Adjusted path to point correctly
-
-const router = express.Router();
-// const authMiddleware = require('../middleware/auth'); // Assume you have an auth middleware to verify tokens
-
+const doctorRoutes = require('./routes/doctorRoutes.js')
 
 dotenv.config();
 
@@ -42,14 +36,13 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // Routes
 app.use('/api', authRoutes);
+app.use('/api/doctors', doctorRoutes);
 // app.use('/api', authRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {
   res.send('API is running');
 });
-
-
 
 
 // Get Doctor Profile
@@ -97,13 +90,3 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-
-
-// chatbot api
-// server.js// server.js
-
-
-
-// server.js
-// server.js

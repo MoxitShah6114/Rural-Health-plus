@@ -498,13 +498,19 @@ const handleSubmit = async (e) => {
       const response = await doctorSignup(formDataToSend);
       console.log("Signup successful:", response);
       
-      // Show success message
-      alert('Signup successful! You will be redirected to login.');
-      
+      if (response.status !== 201) {
+        console.error("Signup failed:", response.data);
+        alert('An error occurred during signup. Please try again.');
+        console.log(response)
+        return;
+      }
+
+      alert('Doctor registered successfully, sent request to admin for approval');
+
       // Use a timeout to ensure the alert is shown before redirect
       setTimeout(() => {
         navigate('/doctor-login');
-      }, 1000);
+      }, 2000);
       
     } catch (error) {
       console.error("Signup error:", error);

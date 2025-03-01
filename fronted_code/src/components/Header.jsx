@@ -1,27 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
-import { Menu, User, X, Heart, Bell, UserPlus } from 'lucide-react';
-import { Container } from './common/Container';
-import { Button } from './common/Button';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import styled from "styled-components";
+import { Menu, User, X, Heart, Bell, UserPlus, Shield } from "lucide-react";
+import { Container } from "./common/Container";
+import { Button } from "./common/Button";
 
 // Enhanced health-themed color palette
 const theme = {
-  primary: '#2563eb',
-  primaryDark: '#1d4ed8',
-  primaryLight: '#dbeafe',
-  secondary: '#10b981',
-  secondaryLight: '#d1fae5',
-  accent: '#8b5cf6',
-  accentLight: '#f3e8ff',
-  background: '#ffffff',
-  backgroundAlt: '#f8fafc',
-  text: '#1e293b',
-  textLight: '#64748b',
-  border: '#e2e8f0',
-  borderDark: '#cbd5e1',
-  shadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)',
-  shadowHover: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+  primary: "#2563eb",
+  primaryDark: "#1d4ed8",
+  primaryLight: "#dbeafe",
+  secondary: "#10b981",
+  secondaryLight: "#d1fae5",
+  accent: "#8b5cf6",
+  accentLight: "#f3e8ff",
+  background: "#ffffff",
+  backgroundAlt: "#f8fafc",
+  text: "#1e293b",
+  textLight: "#64748b",
+  border: "#e2e8f0",
+  borderDark: "#cbd5e1",
+  shadow:
+    "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1)",
+  shadowHover:
+    "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)",
 };
 
 const HeaderWrapper = styled.header`
@@ -51,7 +53,7 @@ const Logo = styled(Link)`
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-2px);
     color: ${theme.primaryDark};
@@ -64,9 +66,9 @@ const LogoIcon = styled.span`
   align-items: center;
   justify-content: center;
   position: relative;
-  
+
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     width: 32px;
     height: 32px;
@@ -76,7 +78,7 @@ const LogoIcon = styled.span`
     transition: transform 0.3s ease;
     transform: scale(0.8);
   }
-  
+
   ${Logo}:hover &::after {
     transform: scale(1.1);
   }
@@ -115,14 +117,15 @@ const MobileMenuButton = styled(IconButton)`
 const LoginButtonGroup = styled.div`
   display: flex;
   gap: 0.75rem;
-  
+
   @media (max-width: 880px) {
     display: none;
   }
 `;
 
 const LoginButton = styled(Button)`
-  padding: ${props => props.variant === 'outline' ? '0.5rem 1.25rem' : '0.5rem 1.25rem'};
+  padding: ${(props) =>
+    props.variant === "outline" ? "0.5rem 1.25rem" : "0.5rem 1.25rem"};
   font-weight: 600;
   font-size: 0.9rem;
   display: flex;
@@ -130,8 +133,10 @@ const LoginButton = styled(Button)`
   gap: 0.5rem;
   transition: all 0.3s ease;
   border-radius: 9999px;
-  
-  ${props => props.variant === 'outline' ? `
+
+  ${(props) =>
+    props.variant === "outline"
+      ? `
     background-color: transparent;
     color: ${theme.primary};
     border: 2px solid ${theme.primary};
@@ -141,7 +146,8 @@ const LoginButton = styled(Button)`
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
     }
-  ` : `
+  `
+      : `
     background-color: ${theme.accent};
     color: white;
     border: none;
@@ -175,9 +181,11 @@ const MobileMenu = styled.div`
   z-index: 200;
   display: flex;
   flex-direction: column;
-  transform: ${props => props.isOpen ? 'translateX(0)' : 'translateX(-100%)'};
+  transform: ${(props) =>
+    props.isOpen ? "translateX(0)" : "translateX(-100%)"};
   transition: transform 0.3s ease-in-out;
-  box-shadow: ${props => props.isOpen ? '0 0 0 100vw rgba(0,0,0,0.5)' : 'none'};
+  box-shadow: ${(props) =>
+    props.isOpen ? "0 0 0 100vw rgba(0,0,0,0.5)" : "none"};
 `;
 
 const MobileMenuHeader = styled.div`
@@ -203,7 +211,8 @@ const MobileActions = styled.div`
 `;
 
 const MobileLoginButton = styled(Button)`
-  background-color: ${props => props.variant === 'secondary' ? theme.accent : theme.primary};
+  background-color: ${(props) =>
+    props.variant === "secondary" ? theme.accent : theme.primary};
   color: white;
   border: none;
   border-radius: 0.75rem;
@@ -215,9 +224,10 @@ const MobileLoginButton = styled(Button)`
   justify-content: center;
   gap: 0.5rem;
   transition: all 0.2s ease;
-  
+
   &:hover {
-    background-color: ${props => props.variant === 'secondary' ? '#7c3aed' : theme.primaryDark};
+    background-color: ${(props) =>
+      props.variant === "secondary" ? "#7c3aed" : theme.primaryDark};
     transform: translateY(-2px);
   }
 `;
@@ -229,13 +239,13 @@ export const Header = () => {
   // Prevent scrolling when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
-    
+
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [mobileMenuOpen]);
 
@@ -252,7 +262,9 @@ export const Header = () => {
       <HeaderWrapper>
         <HeaderContainer>
           <Logo to="/">
-            <LogoIcon><Heart size={24} /></LogoIcon>
+            <LogoIcon>
+              <Heart size={24} />
+            </LogoIcon>
             Rural Health+
           </Logo>
 
@@ -267,10 +279,15 @@ export const Header = () => {
                 <UserPlus size={16} />
                 Patient Login
               </LoginButton>
-              
+
               <LoginButton as={Link} to="/doctor-login" variant="outline">
                 <User size={16} />
                 Doctor Login
+              </LoginButton>
+
+              <LoginButton as={Link} to="/admin-login" variant="outline">
+                <Shield size={16} />
+                Admin Login
               </LoginButton>
             </LoginButtonGroup>
 
@@ -285,7 +302,9 @@ export const Header = () => {
       <MobileMenu isOpen={mobileMenuOpen}>
         <MobileMenuHeader>
           <Logo to="/" onClick={closeMobileMenu}>
-            <LogoIcon><Heart size={24} /></LogoIcon>
+            <LogoIcon>
+              <Heart size={24} />
+            </LogoIcon>
             Rural Health+
           </Logo>
           <MobileMenuClose onClick={closeMobileMenu} aria-label="Close menu">
@@ -294,12 +313,21 @@ export const Header = () => {
         </MobileMenuHeader>
 
         <MobileActions>
-          <MobileLoginButton as={Link} to="/patient-login" onClick={closeMobileMenu}>
+          <MobileLoginButton
+            as={Link}
+            to="/patient-login"
+            onClick={closeMobileMenu}
+          >
             <UserPlus size={20} />
             Patient Login
           </MobileLoginButton>
-          
-          <MobileLoginButton as={Link} to="/doctor-login" onClick={closeMobileMenu} variant="secondary">
+
+          <MobileLoginButton
+            as={Link}
+            to="/doctor-login"
+            onClick={closeMobileMenu}
+            variant="secondary"
+          >
             <User size={20} />
             Doctor Login
           </MobileLoginButton>

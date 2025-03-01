@@ -572,6 +572,7 @@ export const Home = () => {
               <UserPlus size={20} />
               Join as Doctor
             </CTAButton>
+           
           </CTAButtonGroup>
         </HeroContent>
       </HeroSection>

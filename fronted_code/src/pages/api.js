@@ -30,7 +30,7 @@ export const patientLogin = async (credentials) => {
 // In api.js
 export const doctorSignup = async (formData) => {
     try {
-      const response = await api.post('/doctor/signup', formData, {
+      const response = await api.post('/doctors/doctor/signup', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -45,7 +45,7 @@ export const doctorSignup = async (formData) => {
 
 // Doctor Login
 export const doctorLogin = async (credentials) => {
-  const response = await api.post('/doctor/login', credentials);
+  const response = await api.post('/doctors/doctor/login', credentials);
   return response.data;
 };
 

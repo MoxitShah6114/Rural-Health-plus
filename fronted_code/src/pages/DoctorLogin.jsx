@@ -313,10 +313,11 @@ export const DoctorLogin = () => {
     try {
       const response = await doctorLogin({ email, password });
       console.log(response);
+
       alert('Login successful!');
-      localStorage.setItem('doctorToken', 'sample-token-value'); // You can replace this with actual token if using JWT
-      localStorage.setItem('doctorInfo', JSON.stringify(response.doctor)); // Save doctor info
-      navigate('/doctor-dashboard'); // Redirect to doctor's dashboard after successful login
+      // localStorage.setItem('doctorToken', 'sample-token-value'); // You can replace this with actual token if using JWT
+      // localStorage.setItem('doctorInfo', JSON.stringify(response.doctor)); // Save doctor info
+      // navigate('/doctor-dashboard'); // Redirect to doctor's dashboard after successful login
     } catch (error) {
       setError('Login failed: ' + error.response.data.message); // Display error message
     }
