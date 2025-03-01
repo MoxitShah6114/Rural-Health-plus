@@ -36,11 +36,3 @@ Rural Health + is a project aimed at improving healthcare access and services in
 ## Contributing
 
 We welcome contributions! Please read our CONTRIBUTING.md for guidelines on how to get involved.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-## Contact
-
-For any inquiries, please contact us at [email@example.com](mailto:email@example.com).
