@@ -103,10 +103,3 @@ A compressed 24-hour sprint cycle ensures rapid deployment:
 
 ## Contribution
 We welcome contributions! Feel free to submit issues and pull requests.
-
-## License
-This project is licensed under the MIT License.
-
-## Contact
-For further details, reach out via email at [your-email@example.com](mailto:your-email@example.com).
-
