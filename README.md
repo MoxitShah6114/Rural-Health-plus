@@ -1,4 +1,4 @@
-# Rural-Health-plus
+# Rural-Health-Plus
 
 Rural Health + is a project aimed at improving healthcare access and services in rural areas.
 
@@ -32,7 +32,3 @@ Rural Health + is a project aimed at improving healthcare access and services in
     npm start
     ```
 2. Open your browser and navigate to `http://localhost:3000`.
-
-## Contributing
-
-We welcome contributions! Please read our CONTRIBUTING.md for guidelines on how to get involved.
