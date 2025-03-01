@@ -3,11 +3,12 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const path = require('path');
+
 const router = express.Router();
 
 // Import models
 const Patient = require('../models/Patient');
-const Doctor = require('../models/Doctor');
+
 
 // Configure multer for file storage
 const storage = multer.diskStorage({
@@ -65,7 +66,7 @@ router.post('/patient/signup', async (req, res) => {
       fullName, 
       email, 
       mobile, 
-      password: hashedPassword 
+      password: hashedPassword,
     });
     
     await newPatient.save();
@@ -198,10 +199,6 @@ router.post('/doctor/login', async (req, res) => {
 router.get('/auth-test', (req, res) => {
   res.json({ message: 'Auth routes are working' });
 });
-
-
-
-
 
 
 module.exports = router;

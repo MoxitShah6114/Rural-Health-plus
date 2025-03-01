@@ -1,5 +1,5 @@
 // models/Doctor.js
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const doctorSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
@@ -12,12 +12,17 @@ const doctorSchema = new mongoose.Schema({
   password: { type: String, required: true },
   biography: { type: String },
   department: { type: String, required: true },
-  profileImage: { 
+  status: {
     type: String,
-    default: null
+    enum: ["pending", "active", "rejected"],
+    default: "pending",
+  }, // Add status field
+  profileImage: {
+    type: String,
+    default: null,
   },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
 });
 
-const Doctor = mongoose.model('Doctor', doctorSchema);
+const Doctor = mongoose.model("Doctor", doctorSchema);
 module.exports = Doctor;

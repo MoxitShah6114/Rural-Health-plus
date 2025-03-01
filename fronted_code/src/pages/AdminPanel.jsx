@@ -1,22 +1,24 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-import { Container } from '../components/common/Container';
-import { Card } from '../components/common/Card';
-import { Button } from '../components/common/Button';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { Container } from "../components/common/Container";
+import { Card } from "../components/common/Card";
+import { Button } from "../components/common/Button";
+import { CheckCircle, XCircle, User, Clipboard } from "lucide-react";
+import axios from "axios";
 
 // Modern healthcare color palette
 const theme = {
-  primary: '#2563eb',
-  primaryLight: '#dbeafe',
-  primaryDark: '#1e40af',
-  secondary: '#10b981',
-  accent: '#8b5cf6',
-  background: '#f8fafc',
-  cardBg: '#ffffff',
-  text: '#1e293b',
-  textLight: '#64748b',
-  border: '#e2e8f0',
+  primary: "#2563eb",
+  primaryLight: "#dbeafe",
+  primaryDark: "#1e40af",
+  secondary: "#10b981",
+  accent: "#8b5cf6",
+  background: "#f8fafc",
+  cardBg: "#ffffff",
+  text: "#1e293b",
+  textLight: "#64748b",
+  border: "#e2e8f0",
 };
 
 // Styled Components
@@ -50,17 +52,62 @@ const CardContent = styled.div`
   text-align: center;
 `;
 
-export const AdminPanel = () => {
-  // Sample data for doctors and patients (replace with actual data)
-  const doctors = [
-    { id: 1, name: 'Dr. John Doe', specialty: 'Cardiology', email: 'john@example.com' },
-    { id: 2, name: 'Dr. Jane Smith', specialty: 'Pediatrics', email: 'jane@example.com' },
-  ];
+const RequestButton = styled(Button)`
+  margin: 0.5rem 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-  const patients = [
-    { id: 1, name: 'Alice Brown', age: 30, condition: 'Diabetes' },
-    { id: 2, name: 'Bob Johnson', age: 45, condition: 'Hypertension' },
-  ];
+const DoctorInfo = styled.div`
+  text-align: left;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid ${theme.border};
+  border-radius: 8px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: ${theme.primaryLight}20;
+  }
+`;
+
+export const AdminPanel = () => {
+  const [pendingDoctors, setPendingDoctors] = useState([]);
+
+  const [patients, setPatients] = useState([
+    { id: 1, name: "Alice Brown", age: 30, condition: "Diabetes" },
+    { id: 2, name: "Bob Johnson", age: 45, condition: "Hypertension" },
+  ]);
+
+  useEffect(() => {
+    const fetchPendingDoctors = async () => {
+      const response = await axios.get("http://localhost:5000/api/doctors/pending");
+      console.log(await response);
+      setPendingDoctors(response.data);
+    };
+    fetchPendingDoctors();
+  }, []);
+
+  const handleAccept = async (id) => {
+    try {
+      await axios.patch(`http://localhost:5000/api/doctors/${id}/approve`);
+      setPendingDoctors(pendingDoctors.filter(doc => doc.id !== id));
+      alert('Doctor approved successfully.');
+    } catch (error) {
+      console.error('Error approving doctor:', error);
+    }
+  };
+
+  const handleReject = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/doctors/${id}/reject`);
+      setPendingDoctors(pendingDoctors.filter(doc => doc.id !== id));
+      alert('Doctor rejected successfully.');
+    } catch (error) {
+      console.error('Error rejecting doctor:', error);
+    }
+  };
 
   return (
     <AdminDashboardContainer>
@@ -68,21 +115,36 @@ export const AdminPanel = () => {
 
       <StyledCard>
         <CardContent>
-          <h3>Doctors</h3>
-          {doctors.map((doctor) => (
-            <div key={doctor.id}>
-              <p>
-                <strong>Name:</strong> {doctor.name}
-              </p>
-              <p>
-                <strong>Specialty:</strong> {doctor.specialty}
-              </p>
-              <p>
-                <strong>Email:</strong> {doctor.email.replace(/(.{2})(.)(?=@)/, '$1') + doctor.email.slice(-4)} {/* Masking email */}
-              </p>
-              <hr />
-            </div>
-          ))}
+          <h3>Doctor Registration Requests</h3>
+          {pendingDoctors.length > 0 ? (
+            pendingDoctors.map((doctor) => (
+              <DoctorInfo key={doctor.id}>
+                <p>
+                  <strong>Name:</strong> {doctor.name} <User size={16} />
+                </p>
+                <p>
+                  <strong>Specialty:</strong> {doctor.specialty}
+                </p>
+                <p>
+                  <strong>Email:</strong> {doctor.email}
+                </p>
+                <RequestButton
+                  onClick={() => handleAccept(doctor._id)}
+                  variant="success"
+                >
+                  <CheckCircle size={16} /> Accept
+                </RequestButton>
+                <RequestButton
+                  onClick={() => handleReject(doctor._id)}
+                  variant="danger"
+                >
+                  <XCircle size={16} /> Reject
+                </RequestButton>
+              </DoctorInfo>
+            ))
+          ) : (
+            <p>No doctor registration requests.</p>
+          )}
         </CardContent>
       </StyledCard>
 
@@ -90,7 +152,7 @@ export const AdminPanel = () => {
         <CardContent>
           <h3>Patients</h3>
           {patients.map((patient) => (
-            <div key={patient.id}>
+            <DoctorInfo key={patient.id}>
               <p>
                 <strong>Name:</strong> {patient.name}
               </p>
@@ -100,13 +162,14 @@ export const AdminPanel = () => {
               <p>
                 <strong>Condition:</strong> {patient.condition}
               </p>
-              <hr />
-            </div>
+            </DoctorInfo>
           ))}
         </CardContent>
       </StyledCard>
 
-      <Button as={Link} to="/dashboard" variant="primary">Back to Dashboard</Button>
+      <Button as={Link} to="/dashboard" variant="primary">
+        Back to Dashboard
+      </Button>
     </AdminDashboardContainer>
   );
 };

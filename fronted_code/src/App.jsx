@@ -19,7 +19,6 @@ import { PatientDashboard } from './pages/PatientDashboard'; // Import the new c
 import { AdminPanel } from './pages/AdminPanel';
 import { AdminLogin } from './pages/AdminLogin';
 
-
 function App() {
   return (
     <Router>
