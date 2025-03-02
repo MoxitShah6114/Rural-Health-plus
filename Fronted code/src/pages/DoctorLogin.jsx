@@ -1,0 +1,992 @@
+// import React, { useState } from 'react';
+// import styled from 'styled-components';
+// import { Container } from '../components/common/Container';
+// import { Card } from '../components/common/Card';
+// import { Button } from '../components/common/Button';
+// import { Link, useNavigate } from 'react-router-dom';
+// import { Mail, Lock, LogIn, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
+// import { mockDoctor } from '../data/mockData';
+// import { doctorLogin } from './api';
+
+// // Modern health-themed color palette
+// const theme = {
+//   primary: '#2563eb',
+//   primaryLight: '#dbeafe',
+//   primaryDark: '#1e40af',
+//   secondary: '#10b981',
+//   secondaryLight: '#d1fae5',
+//   accent: '#8b5cf6',
+//   accentLight: '#f3e8ff',
+//   warning: '#f59e0b',
+//   danger: '#ef4444',
+//   background: '#f8fafc',
+//   cardBg: '#ffffff',
+//   text: '#1e293b',
+//   textLight: '#64748b',
+//   textMuted: '#94a3b8',
+//   border: '#e2e8f0',
+//   shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+// };
+
+// const PageContainer = styled(Container)`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   min-height: 80vh;
+//   padding: 2rem 1.5rem;
+// `;
+
+// const Title = styled.h1`
+//   color: ${theme.text};
+//   font-size: 2.75rem;
+//   font-weight: 800;
+//   margin-bottom: 2rem;
+//   text-align: center;
+//   position: relative;
+  
+//   &:after {
+//     content: '';
+//     position: absolute;
+//     bottom: -12px;
+//     left: 50%;
+//     transform: translateX(-50%);
+//     width: 60px;
+//     height: 4px;
+//     background: linear-gradient(90deg, ${theme.primary}, ${theme.accent});
+//     border-radius: 4px;
+//   }
+// `;
+
+// const LoginCard = styled(Card)`
+//   width: 100%;
+//   max-width: 450px;
+//   border-radius: 16px;
+//   box-shadow: ${theme.shadow};
+//   overflow: hidden;
+//   background: ${theme.cardBg};
+//   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+//   &:hover {
+//     transform: translateY(-5px);
+//     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+//   }
+// `;
+
+// const CardHeader = styled.div`
+//   background: linear-gradient(135deg, ${theme.primary}, ${theme.primaryDark});
+//   padding: 2rem;
+//   text-align: center;
+//   color: white;
+// `;
+
+// const CardTitle = styled.h2`
+//   font-size: 1.5rem;
+//   font-weight: 600;
+//   margin: 0;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 0.75rem;
+// `;
+
+// const CardIcon = styled.div`
+//   background: rgba(255, 255, 255, 0.2);
+//   width: 40px;
+//   height: 40px;
+//   border-radius: 50%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `;
+
+// const CardContent = styled.div`
+//   padding: 2rem;
+// `;
+
+// const Form = styled.form`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 1.5rem;
+// `;
+
+// const FormGroup = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   gap: 0.5rem;
+//   position: relative;
+// `;
+
+// const Label = styled.label`
+//   color: ${theme.text};
+//   font-weight: 600;
+//   font-size: 0.95rem;
+//   display: flex;
+//   align-items: center;
+//   gap: 0.5rem;
+  
+//   svg {
+//     color: ${theme.primary};
+//   }
+// `;
+
+// const InputWrapper = styled.div`
+//   position: relative;
+//   display: flex;
+//   align-items: center;
+// `;
+
+// const Input = styled.input`
+//   width: 100%;
+//   padding: 0.9rem 1rem 0.9rem 2.75rem;
+//   border: 1px solid ${theme.border};
+//   border-radius: 8px;
+//   background-color: ${theme.background};
+//   color: ${theme.text};
+//   font-size: 1rem;
+//   transition: all 0.3s ease;
+  
+//   &:focus {
+//     outline: none;
+//     border-color: ${theme.primary};
+//     box-shadow: 0 0 0 3px ${theme.primaryLight};
+//   }
+  
+//   &::placeholder {
+//     color: ${theme.textMuted};
+//   }
+// `;
+
+// const InputIcon = styled.div`
+//   position: absolute;
+//   left: 1rem;
+//   color: ${theme.textLight};
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// `;
+
+// const PasswordToggle = styled.button`
+//   position: absolute;
+//   right: 1rem;
+//   background: none;
+//   border: none;
+//   color: ${theme.textLight};
+//   cursor: pointer;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   transition: color 0.2s ease;
+  
+//   &:hover {
+//     color: ${theme.primary};
+//   }
+// `;
+
+// const RememberForgot = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   margin-top: -0.5rem;
+// `;
+
+// const RememberMe = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 0.5rem;
+  
+//   input {
+//     accent-color: ${theme.primary};
+//     width: 16px;
+//     height: 16px;
+//   }
+  
+//   label {
+//     color: ${theme.textLight};
+//     font-size: 0.9rem;
+//     cursor: pointer;
+//   }
+// `;
+
+// const ForgotPassword = styled(Link)`
+//   color: ${theme.primary};
+//   font-size: 0.9rem;
+//   font-weight: 500;
+//   transition: color 0.2s ease;
+  
+//   &:hover {
+//     color: ${theme.primaryDark};
+//     text-decoration: underline;
+//   }
+// `;
+
+// const LoginButton = styled(Button)`
+//   background: linear-gradient(135deg, ${theme.primary}, ${theme.primaryDark});
+//   color: white;
+//   font-weight: 600;
+//   padding: 1rem;
+//   border-radius: 8px;
+//   border: none;
+//   cursor: pointer;
+//   transition: all 0.3s ease;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 0.5rem;
+//   margin-top: 0.5rem;
+  
+//   &:hover {
+//     transform: translateY(-2px);
+//     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+//   }
+  
+//   &:active {
+//     transform: translateY(0);
+//   }
+// `;
+
+// const Divider = styled.div`
+//   display: flex;
+//   align-items: center;
+//   margin: 1.5rem 0;
+  
+//   &::before, &::after {
+//     content: '';
+//     flex: 1;
+//     height: 1px;
+//     background: ${theme.border};
+//   }
+  
+//   span {
+//     padding: 0 1rem;
+//     color: ${theme.textLight};
+//     font-size: 0.9rem;
+//   }
+// `;
+
+// const SignupPrompt = styled.div`
+//   text-align: center;
+//   margin-top: 1rem;
+//   color: ${theme.textLight};
+//   font-size: 0.95rem;
+// `;
+
+// const SignupLink = styled(Link)`
+//   color: ${theme.primary};
+//   font-weight: 600;
+//   transition: color 0.2s ease;
+//   margin-left: 0.25rem;
+  
+//   &:hover {
+//     color: ${theme.primaryDark};
+//     text-decoration: underline;
+//   }
+// `;
+
+// const ErrorMessage = styled.div`
+//   background-color: #fee2e2;
+//   color: ${theme.danger};
+//   padding: 0.75rem;
+//   border-radius: 8px;
+//   margin-bottom: 1rem;
+//   display: flex;
+//   align-items: center;
+//   gap: 0.5rem;
+//   font-size: 0.9rem;
+  
+//   svg {
+//     color: ${theme.danger};
+//   }
+// `;
+
+// export const DoctorLogin = () => {
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [rememberMe, setRememberMe] = useState(false);
+//   const [showPassword, setShowPassword] = useState(false);
+//   const [error, setError] = useState('');
+//   const navigate = useNavigate();
+
+//     const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setError(''); // Clear any previous errors
+//     try {
+//       const response = await doctorLogin({ email, password });
+//       console.log(response);
+//       alert('Login successful!');
+//       localStorage.setItem('doctorToken', 'sample-token-value'); // You can replace this with actual token if using JWT
+//       localStorage.setItem('doctorInfo', JSON.stringify(response.doctor)); // Save doctor info
+//       navigate('/doctor-dashboard'); // Redirect to doctor's dashboard after successful login
+//     } catch (error) {
+//       setError('Login failed: ' + error.response.data.message); // Display error message
+//     }
+//   };
+
+//   const toggleShowPassword = () => {
+//     setShowPassword(!showPassword);
+//   };
+
+//   return (
+//     <PageContainer>
+//       <Title>Doctor Login</Title>
+//       <LoginCard>
+//         <CardHeader>
+//           <CardTitle>
+//             <CardIcon>
+//               <User size={20} />
+//             </CardIcon>
+//             Rural Health+ Doctor Access 
+//           </CardTitle>
+//         </CardHeader>
+        
+//         <CardContent>
+//           {error && (
+//             <ErrorMessage>
+//               <AlertCircle size={18} />
+//               {error}
+//             </ErrorMessage>
+//           )}
+          
+//           <Form onSubmit={handleSubmit}>
+//             <FormGroup>
+//               <Label htmlFor="email">
+//                 <Mail size={16} /> Email Address
+//               </Label>
+//               <InputWrapper>
+//                 <InputIcon>
+//                   <Mail size={18} />
+//                 </InputIcon>
+//                 <Input
+//                   type="email"
+//                   id="email"
+//                   value={email}
+//                   onChange={(e) => setEmail(e.target.value)}
+//                   placeholder="doctor@example.com"
+//                   required
+//                 />
+//               </InputWrapper>
+//             </FormGroup>
+
+//             <FormGroup>
+//               <Label htmlFor="password">
+//                 <Lock size={16} /> Password
+//               </Label>
+//               <InputWrapper>
+//                 <InputIcon>
+//                   <Lock size={18} />
+//                 </InputIcon>
+//                 <Input
+//                   type={showPassword ? "text" : "password"}
+//                   id="password"
+//                   value={password}
+//                   onChange={(e) => setPassword(e.target.value)}
+//                   placeholder="Enter your password"
+//                   required
+//                 />
+//                 <PasswordToggle 
+//                   type="button" 
+//                   onClick={toggleShowPassword}
+//                   aria-label={showPassword ? "Hide password" : "Show password"}
+//                 >
+//                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+//                 </PasswordToggle>
+//               </InputWrapper>
+//             </FormGroup>
+            
+//             <RememberForgot>
+//               <RememberMe>
+//                 <input 
+//                   type="checkbox" 
+//                   id="remember" 
+//                   checked={rememberMe}
+//                   onChange={() => setRememberMe(!rememberMe)}
+//                 />
+//                 <label htmlFor="remember">Remember me</label>
+//               </RememberMe>
+//               <ForgotPassword to="/forgot-password">Forgot Password?</ForgotPassword>
+//             </RememberForgot>
+
+//             <LoginButton type="submit">
+//               <LogIn size={18} />
+//               Sign In to Your Account
+//             </LoginButton>
+//           </Form>
+          
+//           <Divider>
+//             <span>OR</span>
+//           </Divider>
+          
+//           <SignupPrompt>
+//             Don't have an account?
+//             <SignupLink to="/doctor-signup">Register here</SignupLink>
+//           </SignupPrompt>
+//         </CardContent>
+//       </LoginCard>
+//     </PageContainer>
+//   );
+// };
+// const handleSubmit = (e) => {
+//   e.preventDefault();
+  
+//   // Simulate authentication
+//   if (email === mockDoctor.email && password === mockDoctor.password) {
+//     // Save auth token
+//     localStorage.setItem('doctorToken', 'sample-token-value');
+//     // Save doctor info if needed
+//     localStorage.setItem('doctorInfo', JSON.stringify(mockDoctor));
+//     // Redirect to dashboard
+//     navigate('/doctor-dashboard');
+//   } else {
+//     setError('Invalid email or password. Please try again.');
+//   }
+// };
+
+
+
+
+
+
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { Container } from '../components/common/Container';
+import { Card } from '../components/common/Card';
+import { Button } from '../components/common/Button';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mail, Lock, LogIn, User, Eye, EyeOff, AlertCircle } from 'lucide-react';
+
+// Modern health-themed color palette
+const theme = {
+  primary: '#2563eb',
+  primaryLight: '#dbeafe',
+  primaryDark: '#1e40af',
+  secondary: '#10b981',
+  secondaryLight: '#d1fae5',
+  accent: '#8b5cf6',
+  accentLight: '#f3e8ff',
+  warning: '#f59e0b',
+  danger: '#ef4444',
+  background: '#f8fafc',
+  cardBg: '#ffffff',
+  text: '#1e293b',
+  textLight: '#64748b',
+  textMuted: '#94a3b8',
+  border: '#e2e8f0',
+  shadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+};
+
+// Mock doctors data with different statuses
+const mockDoctors = [
+  {
+    id: 1,
+    fullName: 'Dr. John Smith',
+    email: 'harshbhanushali7705@gmail.com',
+    password: 'HarshBhanushali@770',
+    specialty: 'Cardiology',
+    department: 'Cardiology',
+    experience: 10,
+    status: 'approved',
+    profileImage: 'https://randomuser.me/api/portraits/men/42.jpg'
+  },
+  {
+    id: 2,
+    email: 'pending@example.com',
+    password: 'password123',
+    fullName: 'Dr. Sarah Johnson',
+    specialty: 'Pediatrics',
+    department: 'Pediatrics',
+    experience: 8,
+    status: 'pending',
+    profileImage: 'https://randomuser.me/api/portraits/women/32.jpg'
+  },
+  {
+    id: 3,
+    email: 'rejected@example.com',
+    password: 'password123',
+    fullName: 'Dr. Michael Chen',
+    specialty: 'Neurology',
+    department: 'Neurology',
+    experience: 12,
+    status: 'rejected',
+    rejectionReason: 'Incomplete documentation provided. Please resubmit with complete credentials.',
+    profileImage: 'https://randomuser.me/api/portraits/men/22.jpg'
+  }
+];
+
+const PageContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 2rem 1.5rem;
+`;
+
+const Title = styled.h1`
+  color: ${theme.text};
+  font-size: 2.75rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  text-align: center;
+  position: relative;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, ${theme.primary}, ${theme.accent});
+    border-radius: 4px;
+  }
+`;
+
+const LoginCard = styled(Card)`
+  width: 100%;
+  max-width: 450px;
+  border-radius: 16px;
+  box-shadow: ${theme.shadow};
+  overflow: hidden;
+  background: ${theme.cardBg};
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+`;
+
+const CardHeader = styled.div`
+  background: linear-gradient(135deg, ${theme.primary}, ${theme.primaryDark});
+  padding: 2rem;
+  text-align: center;
+  color: white;
+`;
+
+const CardTitle = styled.h2`
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+`;
+
+const CardIcon = styled.div`
+  background: rgba(255, 255, 255, 0.2);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CardContent = styled.div`
+  padding: 2rem;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+`;
+
+const Label = styled.label`
+  color: ${theme.text};
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  svg {
+    color: ${theme.primary};
+  }
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 0.9rem 1rem 0.9rem 2.75rem;
+  border: 1px solid ${theme.border};
+  border-radius: 8px;
+  background-color: ${theme.background};
+  color: ${theme.text};
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: ${theme.primary};
+    box-shadow: 0 0 0 3px ${theme.primaryLight};
+  }
+  
+  &::placeholder {
+    color: ${theme.textMuted};
+  }
+`;
+
+const InputIcon = styled.div`
+  position: absolute;
+  left: 1rem;
+  color: ${theme.textLight};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PasswordToggle = styled.button`
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: ${theme.textLight};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: ${theme.primary};
+  }
+`;
+
+const RememberForgot = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -0.5rem;
+`;
+
+const RememberMe = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  input {
+    accent-color: ${theme.primary};
+    width: 16px;
+    height: 16px;
+  }
+  
+  label {
+    color: ${theme.textLight};
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+`;
+
+const ForgotPassword = styled(Link)`
+  color: ${theme.primary};
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  
+  &:hover {
+    color: ${theme.primaryDark};
+    text-decoration: underline;
+  }
+`;
+
+const LoginButton = styled(Button)`
+  background: linear-gradient(135deg, ${theme.primary}, ${theme.primaryDark});
+  color: white;
+  font-weight: 600;
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+`;
+
+const Divider = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: ${theme.border};
+  }
+  
+  span {
+    padding: 0 1rem;
+    color: ${theme.textLight};
+    font-size: 0.9rem;
+  }
+`;
+
+const SignupPrompt = styled.div`
+  text-align: center;
+  margin-top: 1rem;
+  color: ${theme.textLight};
+  font-size: 0.95rem;
+`;
+
+const SignupLink = styled(Link)`
+  color: ${theme.primary};
+  font-weight: 600;
+  transition: color 0.2s ease;
+  margin-left: 0.25rem;
+  
+  &:hover {
+    color: ${theme.primaryDark};
+    text-decoration: underline;
+  }
+`;
+
+const ErrorMessage = styled.div`
+  background-color: #fee2e2;
+  color: ${theme.danger};
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  
+  svg {
+    color: ${theme.danger};
+  }
+`;
+
+const DevHelperContainer = styled.div`
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: ${theme.primaryLight};
+  border-radius: 8px;
+  font-size: 0.85rem;
+`;
+
+const DevHelperTitle = styled.div`
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: ${theme.primary};
+`;
+
+const DevHelperList = styled.ul`
+  margin: 0;
+  padding-left: 1.5rem;
+`;
+
+const DevHelperItem = styled.li`
+  margin-bottom: 0.25rem;
+`;
+
+export const DoctorLogin = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError(''); // Clear any previous errors
+    setLoading(true);
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      // Find the doctor with matching credentials
+      const doctor = mockDoctors.find(
+        doc => doc.email === email && doc.password === password
+      );
+      
+      if (doctor) {
+        // Check doctor status
+        if (doctor.status === 'approved') {
+          // Save auth token and doctor info
+          localStorage.setItem('doctorToken', 'mock-token-' + doctor.id);
+          localStorage.setItem('doctorInfo', JSON.stringify(doctor));
+          
+          // Save "remember me" preference
+          if (rememberMe) {
+            localStorage.setItem('rememberDoctor', 'true');
+          }
+          
+          // Redirect to dashboard
+          navigate('/doctor-dashboard');
+        } else if (doctor.status === 'pending') {
+          setError('Your account is pending approval. Our admin team will review your application soon.');
+        } else if (doctor.status === 'rejected') {
+          setError(`Your application was rejected. Reason: ${doctor.rejectionReason || 'Not specified'}`);
+        }
+      } else {
+        // Invalid credentials
+        setError('Invalid email or password. Please try again.');
+      }
+      
+      setLoading(false);
+    }, 800); // Simulate network delay
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  return (
+    <PageContainer>
+      <Title>Doctor Login</Title>
+      <LoginCard>
+        <CardHeader>
+          <CardTitle>
+            <CardIcon>
+              <User size={20} />
+            </CardIcon>
+            Rural Health+ Doctor Access 
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent>
+          {error && (
+            <ErrorMessage>
+              <AlertCircle size={18} />
+              {error}
+            </ErrorMessage>
+          )}
+          
+          <Form onSubmit={handleSubmit}>
+            <FormGroup>
+              <Label htmlFor="email">
+                <Mail size={16} /> Email Address
+              </Label>
+              <InputWrapper>
+                <InputIcon>
+                  <Mail size={18} />
+                </InputIcon>
+                <Input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="doctor@example.com"
+                  required
+                  disabled={loading}
+                />
+              </InputWrapper>
+            </FormGroup>
+
+            <FormGroup>
+              <Label htmlFor="password">
+                <Lock size={16} /> Password
+              </Label>
+              <InputWrapper>
+                <InputIcon>
+                  <Lock size={18} />
+                </InputIcon>
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  required
+                  disabled={loading}
+                />
+                <PasswordToggle 
+                  type="button" 
+                  onClick={toggleShowPassword}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  disabled={loading}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </PasswordToggle>
+              </InputWrapper>
+            </FormGroup>
+            
+            <RememberForgot>
+              <RememberMe>
+                <input 
+                  type="checkbox" 
+                  id="remember" 
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
+                  disabled={loading}
+                />
+                <label htmlFor="remember">Remember me</label>
+              </RememberMe>
+              <ForgotPassword to="/forgot-password">Forgot Password?</ForgotPassword>
+            </RememberForgot>
+
+            <LoginButton type="submit" disabled={loading}>
+              <LogIn size={18} />
+              {loading ? 'Signing In...' : 'Sign In to Your Account'}
+            </LoginButton>
+          </Form>
+          
+          <Divider>
+            <span>OR</span>
+          </Divider>
+          
+          <SignupPrompt>
+            Don't have an account?
+            <SignupLink to="/doctor-signup">Register here</SignupLink>
+          </SignupPrompt>
+          
+          {/* Development helper - only shown in non-production environments */}
+          {process.env.NODE_ENV !== 'production' && (
+            <DevHelperContainer>
+              <DevHelperTitle>Test Accounts:</DevHelperTitle>
+              <DevHelperList>
+                <DevHelperItem>
+                  <strong>Approved Doctor:</strong> doctor@example.com / password123
+                </DevHelperItem>
+                <DevHelperItem>
+                  <strong>Pending Doctor:</strong> pending@example.com / password123
+                </DevHelperItem>
+                <DevHelperItem>
+                  <strong>Rejected Doctor:</strong> rejected@example.com / password123
+                </DevHelperItem>
+              </DevHelperList>
+            </DevHelperContainer>
+          )}
+        </CardContent>
+      </LoginCard>
+    </PageContainer>
+  );
+};
+
+export default DoctorLogin;
