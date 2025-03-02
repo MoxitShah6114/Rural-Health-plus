@@ -1,5 +1,8 @@
 # Rural Health +
 
+## Team Name : Health innovators
+## Team number : 3
+
 [Google Drive Link](https://drive.google.com/drive/folders/1kfppRfxopjw-zAW2ojMereCV8DHy3pBg?usp=sharing)
 
 Rural Health+ is an AI-powered healthcare solution designed to bridge the medical accessibility gap in rural and underserved areas. By leveraging AI, telemedicine, and cloud-based infrastructure, the platform ensures essential healthcare services are available to communities with limited medical facilities.
